@@ -42,7 +42,6 @@ public class Estudiante implements Serializable {
     private LocalDate fechaMatricula;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Builder.Default
     private Facultad facultad;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "estudiante")

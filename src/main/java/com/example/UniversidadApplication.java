@@ -3,6 +3,8 @@ package com.example;
 import com.example.entities.Correo;
 import com.example.entities.Estudiante;
 import com.example.entities.Facultad;
+import com.example.entities.Telefono;
+import com.example.model.Genero;
 import com.example.services.EstudianteService;
 import com.example.services.FacultadService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -35,18 +38,19 @@ public class UniversidadApplication implements CommandLineRunner {
 				.nombre("Facultad de Matematicas")
 				.build();
 
-
-		FacultadService.saveFacultad(facultad1);
-		FacultadService.saveFacultad(facultad2);
+		facultadService.saveFacultad(facultad1);
+		facultadService.saveFacultad(facultad2);
 
 		Estudiante estudiante1 = Estudiante.builder()
 				.nombre("Pepe")
 				.primerApellido("Lara")
 				.segundoApellido("Gonzalez")
-				.telefonos(Set.of("411412324", "213454523"))
-				.correo(Set.of(Correo.builder()
-						.direccion("es1@gmail.com")
-						.build()))
+				.telefonos(Set.of(
+						Telefono.builder().numero("411412324").build(),
+						Telefono.builder().numero("213454523").build()))
+				.emails(Set.of(Correo.builder().direccion("es1@gmail.com").build()))
+				.fechaMatricula(LocalDate.now())
+				.genero(Genero.MASCULINO)
 				.facultad(facultad1)
 				.build();
 
@@ -54,19 +58,21 @@ public class UniversidadApplication implements CommandLineRunner {
 				.nombre("Maria")
 				.primerApellido("Gomez")
 				.segundoApellido("Lopez")
-				.telefonos(Set.of("987654321", "456789123"))
-				.correo(Set.of(Correo.builder()
-						.direccion("es2@gmail.com")
-						.build()))
+				.telefonos(Set.of(
+						Telefono.builder().numero("987654321").build(),
+						Telefono.builder().numero("456789123").build()))
+				.emails(Set.of(Correo.builder().direccion("es2@gmail.com").build()))
+				.fechaMatricula(LocalDate.now())
+				.genero(Genero.FEMENINO)
 				.facultad(facultad2)
 				.build();
 
 		estudiante1.getTelefonos().forEach(telefono -> telefono.setEstudiante(estudiante1));
-		estudiante1.getCorreos().forEach(correo -> correo.setEstudiante(estudiante1));
+		estudiante1.getEmails().forEach(correo -> correo.setEstudiante(estudiante1));
 		estudiante2.getTelefonos().forEach(telefono -> telefono.setEstudiante(estudiante2));
-		estudiante2.getCorreos().forEach(correo -> correo.setEstudiante(estudiante2));
+		estudiante2.getEmails().forEach(correo -> correo.setEstudiante(estudiante2));
 
-		estudiante1.saveEstudiante(estudiante1);
-		estudiante2.saveEstudiante(estudiante2);
+		estudianteService.saveEstudiante(estudiante1);
+		estudianteService.saveEstudiante(estudiante2);
 	}
 }
