@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario/Modificacion</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 2;
+            padding: 2;
+        }
+        body {
+            background-color: black;
+            font-family: system-ui, sans-serif;
+            color: white;
+        }
+    </style>
+
+</head>
+<body>
+
+
+ <h1>Formulario de Alta de Estudiante</h1>
+ <div>
+     <a th:href="@{/estudiantes}">Listado</a>
+ </div>
+    <fieldset>
+        <legend>Datos Personales</legend>
+        <div>
+        <label for="nombre">Nombre</label>
+        <label>
+            <input type="text" id="nombre">
+        </label>
+        </div>
+         <div>
+        <label for="primerApellido">Primer Apellido</label>
+        <label>
+            <input type="text" id="primerApellido">
+        </label>
+        </div>
+        <div>
+            <label for="segundoApellido">Segundo Apellido</label>
+            <label>
+                <input type="text" id="segundoApellido">
+            </label>
+        </div>
+        <div>
+            <label for="genero">Género</label>
+            <select id="genero">
+                <option value="MASCULINO">Masculino</option>
+                <option value="FEMENINO">Femenino</option>
+            </select>
+        </div>
+
+        <fieldset>
+            <legend>Datos Académicos</legend>
+            <div>
+            <label for="fechaMatricula">Fecha de Matriculacion</label>
+            <input type="date" id="fechaMatricula">
+            </div>
+            <div>
+            <label for="facultades">Facultad</label>
+            <select id="facultad">
+                <option value="1">Facultad de Ingenieria</option>
+                <option value="2">Facultad de Ciencias</option>
+                <option value="3">Facultad de Medicina</option>
+            </select>
+            </div>
+        </fieldset>
+
+    </fieldset>
+</body>
+</html>
