@@ -62,10 +62,6 @@ public class EstudianteController {
 
         return "redirect:/estudiantes/listar";
     }
-    @GetMapping("/Save")
-    public String saveGetTest() {
-        return "redirect:/estudiantes/Alta";
-    }
 
 
 
