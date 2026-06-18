@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Formulario/Modificacion</title>
@@ -10,8 +10,8 @@
             padding: 2;
         }
         body {
-            background-color: black;
-            font-family: system-ui, sans-serif;
+            background-color: black !important;
+            font-family: sistem-ui, sans-serif;
             color: white;
         }
     </style>
@@ -22,52 +22,73 @@
 
  <h1>Formulario de Alta de Estudiante</h1>
  <div>
-     <a th:href="@{/estudiantes}">Listado</a>
+     <a th:href="@{/estudiantes/listar}">Listado</a>
  </div>
     <fieldset>
         <legend>Datos Personales</legend>
-        <div>
-        <label for="nombre">Nombre</label>
-        <label>
-            <input type="text" id="nombre">
-        </label>
-        </div>
-         <div>
-        <label for="primerApellido">Primer Apellido</label>
-        <label>
-            <input type="text" id="primerApellido">
-        </label>
-        </div>
-        <div>
-            <label for="segundoApellido">Segundo Apellido</label>
-            <label>
-                <input type="text" id="segundoApellido">
-            </label>
-        </div>
+        <form th:action="@{/estudiantes/Save}" th:object="${estudiante}" method="post">
+            <input type="hidden" th:field="*{id}">
+            <div>
+                <label for="Nombre">Nombre:</label>
+                <input type="text" th:field="*{Nombre}" id="Nombre" required>
+            </div>
+            <div>
+                <label for="primerApellido">Primer Apellido:</label>
+                <input type="text" th:field="*{primerApellido}" id="primerApellido" required>
+            </div>
+            <div>
+                <label for="segundoApellido">Segundo Apellido:</label>
+                <input type="text" th:field="*{segundoApellido}" id="segundoApellido">
+            </div>
         <div>
             <label for="genero">Género</label>
-            <select id="genero">
-                <option value="MASCULINO">Masculino</option>
-                <option value="FEMENINO">Femenino</option>
-            </select>
+            <label>
+                <select th:field="*{genero}">
+                    <option value="MASCULINO">Masculino</option>
+                    <option value="FEMENINO">Femenino</option>
+                </select>
+            </label>
         </div>
+            <div>
+                <label>Teléfono</label>
+                <div th:each="tel, iterStat : *{telefonos}">
+                    <input type="text" th:field="*{telefonos[__${iterStat.index}__].numero}">
+                </div>
+            </div>
+            <div>
+                <label>Email</label>
+                <div th:each="correo, iterStat : *{emails}">
+                    <input type="text" th:field="*{emails[__${iterStat.index}__].direccion}">
+                </div>
+            </div>
 
         <fieldset>
             <legend>Datos Académicos</legend>
             <div>
             <label for="fechaMatricula">Fecha de Matriculacion</label>
-            <input type="date" id="fechaMatricula">
+                <input type="date" th:field="*{fechaMatricula}">
             </div>
             <div>
-            <label for="facultades">Facultad</label>
-            <select id="facultad">
-                <option value="1">Facultad de Ingenieria</option>
-                <option value="2">Facultad de Ciencias</option>
-                <option value="3">Facultad de Medicina</option>
-            </select>
+                <label for="facultad">Facultad</label>
+                    <select th:field="*{facultad.id}">
+                        <option value="">-- Selecciona --</option>
+                        <option th:each="fac : ${facultades}"
+                                th:value="${fac.id}"
+                                th:text="${fac.nombre}">
+                        </option>
+                    </select>
             </div>
-        </fieldset>
+            <form th:action="@{/estudiantes/Save}"
+                  th:object="${estudiante}"
+                  method="post">
 
+                ...
+
+                <button type="submit">Guardar</button>
+
+            </form>
+        </fieldset>
+        </form>
     </fieldset>
 </body>
 </html>

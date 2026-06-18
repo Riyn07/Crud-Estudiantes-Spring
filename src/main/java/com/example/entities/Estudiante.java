@@ -8,19 +8,19 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Entity
 @Table(name = "estudiantes")
-@ToString
+@ToString(exclude = {"emails", "facultad"})
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class Estudiante implements Serializable {
+
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -28,17 +28,15 @@ public class Estudiante implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String nombre;
     private String primerApellido;
     private String segundoApellido;
 
-
     @Enumerated(EnumType.STRING)
     private Genero genero;
 
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-
     private LocalDate fechaMatricula;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,10 +44,19 @@ public class Estudiante implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "estudiante")
     @Builder.Default
-    private Set<Telefono> telefonos = new HashSet<>();
+    private List<Telefono> telefonos = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "estudiante")
     @Builder.Default
-    private Set<Correo> emails = new HashSet<>();
+    private List<Correo> emails = new ArrayList<>();
 
+    public void addTelefono(Telefono telefono) {
+        telefonos.add(telefono);
+        telefono.setEstudiante(this);
+    }
+
+    public void addCorreo(Correo correo) {
+        emails.add(correo);
+        correo.setEstudiante(this);
+    }
 }

@@ -13,6 +13,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -45,10 +46,10 @@ public class UniversidadApplication implements CommandLineRunner {
 				.nombre("Pepe")
 				.primerApellido("Lara")
 				.segundoApellido("Gonzalez")
-				.telefonos(Set.of(
+				.telefonos(List.of(
 						Telefono.builder().numero("411412324").build(),
 						Telefono.builder().numero("213454523").build()))
-				.emails(Set.of(Correo.builder().direccion("es1@gmail.com").build()))
+				.emails(List.of(Correo.builder().direccion("es1@gmail.com").build()))
 				.fechaMatricula(LocalDate.now())
 				.genero(Genero.MASCULINO)
 				.facultad(facultad1)
@@ -58,10 +59,10 @@ public class UniversidadApplication implements CommandLineRunner {
 				.nombre("Maria")
 				.primerApellido("Gomez")
 				.segundoApellido("Lopez")
-				.telefonos(Set.of(
+				.telefonos(List.of(
 						Telefono.builder().numero("987654321").build(),
 						Telefono.builder().numero("456789123").build()))
-				.emails(Set.of(Correo.builder().direccion("es2@gmail.com").build()))
+				.emails(List.of(Correo.builder().direccion("es2@gmail.com").build()))
 				.fechaMatricula(LocalDate.now())
 				.genero(Genero.FEMENINO)
 				.facultad(facultad2)

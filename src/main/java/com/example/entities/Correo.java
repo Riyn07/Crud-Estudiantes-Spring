@@ -5,7 +5,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "correos")
-@ToString
+@ToString(exclude = "estudiante")
 @Getter
 @Setter
 @AllArgsConstructor

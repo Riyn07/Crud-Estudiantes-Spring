@@ -13,7 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
+@ToString(exclude = "estudiante")
 public class Telefono implements Serializable {
 
     @Serial
@@ -22,6 +22,7 @@ public class Telefono implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String numero;
 
     @ManyToOne(fetch = FetchType.LAZY)

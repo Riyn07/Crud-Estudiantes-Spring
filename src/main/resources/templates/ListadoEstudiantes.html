@@ -3,8 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 2;
+            padding: 2;
+        }
+        body {
+            background-color: black !important;
+            font-family: system-ui, sans-serif;
+            color: white;
+        }
+        :root {
+            --bg: #000;
+            --text: #f5f5f5;
+            --accent: #4cafef;
+        }
+    </style>
 </head>
 <body>
+
 <h1>Listado de estudiantes</h1>
 <div>
     <a th:href="@{/estudiantes/Alta}">Alta/Modificacion</a>
@@ -19,6 +37,8 @@
         <th>Primer Apellido</th>
         <th>Segundo Apellido</th>
         <th>Género</th>
+        <th>Numero de Telefono</th>
+        <th>Correo Electronico</th>
         <th>Facultad</th>
     </tr>
     </thead>
@@ -28,7 +48,17 @@
         <td th:text="${estudiante.primerApellido}"></td>
         <td th:text="${estudiante.segundoApellido}"></td>
         <td th:text="${estudiante.genero}"></td>
-        <td th:text="${estudiante.facultad.nombre}"></td>
+        <td>
+    <span th:each="tel, iter : ${estudiante.telefonos}">
+        <span th:text="${tel.numero}"></span><span th:if="${!iter.last}">, </span>
+    </span>
+        </td>
+        <td>
+    <span th:each="correo, iter : ${estudiante.emails}">
+        <span th:text="${correo.direccion}"></span><span th:if="${!iter.last}">, </span>
+    </span>
+        </td>
+        <td th:text="${estudiante.facultad?.nombre ?: 'Sin asignar'}"></td>
     </tr>
     </tbody>
 </table>
