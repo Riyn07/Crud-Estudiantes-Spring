@@ -1,94 +1,251 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Formulario/Modificacion</title>
     <style>
         * {
             box-sizing: border-box;
-            margin: 2;
-            padding: 2;
+            margin: 0;
+            padding: 0;
         }
         body {
-            background-color: black !important;
-            font-family: sistem-ui, sans-serif;
+            background-color: #111;
+            font-family: system-ui, sans-serif;
             color: white;
+            padding: 2rem;
+        }
+        h1 { margin-bottom: 1rem; }
+        a {
+            color: #4cafef;
+            display: block;
+            margin-bottom: 1.5rem;
+        }
+        fieldset {
+            border: 1px solid #444;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+        }
+        legend {
+            padding: 0 0.5rem;
+            color: #4cafef;
+            font-weight: bold;
+        }
+        div { margin-bottom: 1rem; }
+        label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            border: 1px solid #555;
+            background-color: #222;
+            color: white;
+            font-size: 1rem;
+        }
+        input[type="submit"] {
+            margin-top: 1rem;
+            padding: 0.6rem 2rem;
+            background-color: #4cafef;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        input[type="submit"]:hover { background-color: #2a8fd4; }
+
+        .error-bubble {
+            display: inline-block;
+            margin-top: 0.4rem;
+            background-color: #c0392b;
+            color: white;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            position: relative;
+        }
+        .error-bubble::before {
+            content: "";
+            position: absolute;
+            top: -6px;
+            left: 14px;
+            border-width: 0 6px 6px 6px;
+            border-style: solid;
+            border-color: transparent transparent #c0392b transparent;
+        }
+        .field-error {
+            border-color: #c0392b !important;
+            background-color: #2a1010 !important;
         }
     </style>
-
 </head>
 <body>
 
+<h1>Formulario de Alta de Estudiante</h1>
+<div>
+    <a th:href="@{/estudiantes/listar}">Listado</a>
+</div>
 
- <h1>Formulario de Alta de Estudiante</h1>
- <div>
-     <a th:href="@{/estudiantes/listar}">Listado</a>
- </div>
-    <fieldset>
-        <legend>Datos Personales</legend>
-        <form th:action="@{/estudiantes/Save}" th:object="${estudiante}" method="post">
-            <input type="hidden" th:field="*{id}">
-            <div>
-                <label for="Nombre">Nombre:</label>
-                <input type="text" th:field="*{Nombre}" id="Nombre" required>
-            </div>
-            <div>
-                <label for="primerApellido">Primer Apellido:</label>
-                <input type="text" th:field="*{primerApellido}" id="primerApellido" required>
-            </div>
-            <div>
-                <label for="segundoApellido">Segundo Apellido:</label>
-                <input type="text" th:field="*{segundoApellido}" id="segundoApellido">
-            </div>
+<fieldset>
+    <legend>Datos Personales</legend>
+    <form th:action="@{/estudiantes/Save}" th:object="${estudiante}" method="post" novalidate>
+        <input type="hidden" th:field="*{id}">
+
         <div>
-            <label for="genero">Género</label>
-            <label>
-                <select th:field="*{genero}">
-                    <option value="MASCULINO">Masculino</option>
-                    <option value="FEMENINO">Femenino</option>
-                </select>
-            </label>
+            <label for="nombre">Nombre: *</label>
+            <input type="text"
+                   th:field="*{nombre}"
+                   th:classappend="${#fields.hasErrors('nombre')} ? 'field-error'"
+                   id="nombre"
+                   pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
+                   minlength="2"
+                   maxlength="30"
+                   oninput="soloLetras(this)"
+                   required>
+            <span th:if="${#fields.hasErrors('nombre')}"
+                  th:each="err : ${#fields.errors('nombre')}"
+                  th:text="${err}"
+                  class="error-bubble"></span>
         </div>
-            <div>
-                <label>Teléfono</label>
-                <div th:each="tel, iterStat : *{telefonos}">
-                    <input type="text" th:field="*{telefonos[__${iterStat.index}__].numero}">
+
+        <div>
+            <label for="primerApellido">Primer Apellido: *</label>
+            <input type="text"
+                   th:field="*{primerApellido}"
+                   th:classappend="${#fields.hasErrors('primerApellido')} ? 'field-error'"
+                   id="primerApellido"
+                   pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
+                   minlength="2"
+                   maxlength="30"
+                   oninput="soloLetras(this)"
+                   required>
+            <span th:if="${#fields.hasErrors('primerApellido')}"
+                  th:each="err : ${#fields.errors('primerApellido')}"
+                  th:text="${err}"
+                  class="error-bubble"></span>
+        </div>
+
+        <div>
+            <label for="segundoApellido">Segundo Apellido: *</label>
+            <input type="text"
+                   th:field="*{segundoApellido}"
+                   th:classappend="${#fields.hasErrors('segundoApellido')} ? 'field-error'"
+                   id="segundoApellido"
+                   pattern="^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$"
+                   minlength="2"
+                   maxlength="30"
+                   oninput="soloLetras(this)"
+                   required>
+            <span th:if="${#fields.hasErrors('segundoApellido')}"
+                  th:each="err : ${#fields.errors('segundoApellido')}"
+                  th:text="${err}"
+                  class="error-bubble"></span>
+        </div>
+
+        <div>
+            <label for="genero">Género: *</label>
+            <select th:field="*{genero}"
+                    th:classappend="${#fields.hasErrors('genero')} ? 'field-error'"
+                    id="genero"
+                    required>
+                <option value="">-- Selecciona un género --</option>
+                <option value="MASCULINO">Masculino</option>
+                <option value="FEMENINO">Femenino</option>
+            </select>
+            <span th:if="${#fields.hasErrors('genero')}"
+                  th:each="err : ${#fields.errors('genero')}"
+                  th:text="${err}"
+                  class="error-bubble"></span>
+        </div>
+
+        <div>
+            <label>Teléfono: *</label>
+            <div th:each="tel, iterStat : *{telefonos}">
+                <input type="text"
+                       th:field="*{telefonos[__${iterStat.index}__].numero}"
+                       th:classappend="${#fields.hasErrors('telefonos[' + iterStat.index + '].numero')} ? 'field-error'"
+                       placeholder="Ej: +34 612 345 678"
+                       oninput="soloNumerosTelefono(this)"
+                       required>
+                <div th:if="${#fields.hasErrors('telefonos[' + iterStat.index + '].numero')}">
+            <span th:each="err : ${#fields.errors('telefonos[' + iterStat.index + '].numero')}"
+                  th:text="${err}"
+                  class="error-bubble"></span>
                 </div>
             </div>
-            <div>
-                <label>Email</label>
-                <div th:each="correo, iterStat : *{emails}">
-                    <input type="text" th:field="*{emails[__${iterStat.index}__].direccion}">
+        </div>
+
+        <div>
+            <label>Email: *</label>
+            <div th:each="correo, iterStat : *{emails}">
+                <input type="email"
+                       th:field="*{emails[__${iterStat.index}__].direccion}"
+                       th:classappend="${#fields.hasErrors('emails[' + iterStat.index + '].direccion')} ? 'field-error'"
+                       placeholder="ejemplo@correo.com"
+                       required>
+                <div th:if="${#fields.hasErrors('emails[' + iterStat.index + '].direccion')}">
+            <span th:each="err : ${#fields.errors('emails[' + iterStat.index + '].direccion')}"
+                  th:text="${err}"
+                  class="error-bubble"></span>
                 </div>
             </div>
+        </div>
 
         <fieldset>
             <legend>Datos Académicos</legend>
+
             <div>
-            <label for="fechaMatricula">Fecha de Matriculacion</label>
-                <input type="date" th:field="*{fechaMatricula}">
+                <label for="fechaMatricula">Fecha de Matriculación: *</label>
+                <input type="date"
+                       th:field="*{fechaMatricula}"
+                       th:classappend="${#fields.hasErrors('fechaMatricula')} ? 'field-error'"
+                       id="fechaMatricula"
+                       required>
+                <span th:if="${#fields.hasErrors('fechaMatricula')}"
+                      th:each="err : ${#fields.errors('fechaMatricula')}"
+                      th:text="${err}"
+                      class="error-bubble"></span>
             </div>
+
             <div>
-                <label for="facultad">Facultad</label>
-                    <select th:field="*{facultad.id}">
-                        <option value="">-- Selecciona --</option>
-                        <option th:each="fac : ${facultades}"
-                                th:value="${fac.id}"
-                                th:text="${fac.nombre}">
-                        </option>
-                    </select>
+                <label for="facultad">Facultad: *</label>
+                <select th:field="*{facultad.id}" id="facultad" required>
+                    <option value="">-- Selecciona una facultad --</option>
+                    <option th:each="fac : ${facultades}"
+                            th:value="${fac.id}"
+                            th:text="${fac.nombre}">
+                    </option>
+                </select>
             </div>
-            <form th:action="@{/estudiantes/Save}"
-                  th:object="${estudiante}"
-                  method="post">
-
-                ...
-
-                <button type="submit">Guardar</button>
-
-            </form>
         </fieldset>
-        </form>
-    </fieldset>
+
+        <div>
+            <input type="submit" value="Guardar">
+        </div>
+
+    </form>
+</fieldset>
+
+<script>
+    function soloLetras(input) {
+        input.value = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]/g, '');
+    }
+
+    function soloNumerosTelefono(input) {
+        input.value = input.value.replace(/[^0-9+\s\-]/g, '');
+    }
+</script>
+
 </body>
 </html>

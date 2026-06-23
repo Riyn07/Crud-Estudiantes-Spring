@@ -1,24 +1,18 @@
 package com.example.controller;
 
-
 import com.example.entities.Correo;
 import com.example.entities.Estudiante;
 import com.example.entities.Telefono;
-import com.example.model.Genero;
 import com.example.services.EstudianteService;
 import com.example.services.FacultadService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 @Controller
@@ -32,7 +26,6 @@ public class EstudianteController {
 
     @GetMapping("/listar")
     public String listarEstudiantes(Model model) {
-
         model.addAttribute("estudiantes", estudianteService.getAllEstudiantes());
         return "ListadoEstudiantes";
     }
@@ -51,21 +44,45 @@ public class EstudianteController {
     }
 
     @PostMapping("/Save")
-    public String procesarFormularioAltaModificacion(Estudiante estudiante, Model model) {
+    public String procesarFormularioAltaModificacion(
+            @Valid @ModelAttribute Estudiante estudiante,
+            BindingResult result,
+            Model model) {
+
+        for (int i = 0; i < estudiante.getEmails().size(); i++) {
+            String direccion = estudiante.getEmails().get(i).getDireccion();
+            if (direccion == null || direccion.isBlank()) {
+                result.rejectValue("emails[" + i + "].direccion", "error.correo", "El correo no puede estar vacío");
+            } else if (!direccion.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
+                result.rejectValue("emails[" + i + "].direccion", "error.correo", "El formato del correo no es válido");
+            }
+        }
+
+        for (int i = 0; i < estudiante.getTelefonos().size(); i++) {
+            String numero = estudiante.getTelefonos().get(i).getNumero();
+            if (numero == null || numero.isBlank()) {
+                result.rejectValue("telefonos[" + i + "].numero", "error.telefono", "El teléfono no puede estar vacío");
+            } else if (!numero.matches("^[0-9+\\s\\-]{7,15}$")) {
+                result.rejectValue("telefonos[" + i + "].numero", "error.telefono", "El teléfono solo puede contener números y tener entre 7 y 15 dígitos");
+            }
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("facultades", facultadService.getAllFacultades());
+            return "AltaEstudiante";
+        }
+
+        if (estudiante.getFacultad() != null && estudiante.getFacultad().getId() != 0) {
+            facultadService.getFacultadById(estudiante.getFacultad().getId())
+                    .ifPresent(estudiante::setFacultad);
+        } else {
+            estudiante.setFacultad(null);
+        }
 
         estudiante.getTelefonos().forEach(t -> t.setEstudiante(estudiante));
         estudiante.getEmails().forEach(c -> c.setEstudiante(estudiante));
 
-        logger.info("Procesando formulario de alta/modificación de estudiante: " + estudiante);
-
         estudianteService.saveEstudiante(estudiante);
-
         return "redirect:/estudiantes/listar";
     }
-
-
-
-    }
-
-
-
+}

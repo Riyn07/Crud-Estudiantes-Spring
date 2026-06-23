@@ -11,11 +11,12 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
 public class Correo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String direccion;
 
     @ManyToOne(fetch = FetchType.LAZY)
