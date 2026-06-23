@@ -99,7 +99,7 @@
 
 <fieldset>
     <legend>Datos Personales</legend>
-    <form th:action="@{/estudiantes/Save}" th:object="${estudiante}" method="post" novalidate>
+    <form th:action="@{/estudiantes/Save}" th:object="${estudiante}" method="post" novalidate enctype="multipart/form-data">
         <input type="hidden" th:field="*{id}">
 
         <div>
@@ -167,6 +167,19 @@
                   th:each="err : ${#fields.errors('genero')}"
                   th:text="${err}"
                   class="error-bubble"></span>
+        </div>
+        <div>
+            <label for="file">Foto: *</label>
+            <input type="file"
+                   name ="file"
+                   title="Seleccione una foto"
+                   id="file"
+                   accept="image/*"
+                   required>
+            </input>
+        </div>
+
+            </label>
         </div>
 
         <div>

@@ -65,6 +65,8 @@ public class Estudiante implements Serializable {
     @Builder.Default
     private List<Correo> emails = new ArrayList<>();
 
+    private String foto;
+
     public void addTelefono(Telefono telefono) {
         telefonos.add(telefono);
         telefono.setEstudiante(this);

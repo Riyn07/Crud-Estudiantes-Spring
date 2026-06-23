@@ -11,7 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -47,7 +50,8 @@ public class EstudianteController {
     public String procesarFormularioAltaModificacion(
             @Valid @ModelAttribute Estudiante estudiante,
             BindingResult result,
-            Model model) {
+            Model model,
+            @RequestParam (name= "file", required = false) MultipartFile file) throws IOException {
 
         for (int i = 0; i < estudiante.getEmails().size(); i++) {
             String direccion = estudiante.getEmails().get(i).getDireccion();
@@ -57,6 +61,7 @@ public class EstudianteController {
                 result.rejectValue("emails[" + i + "].direccion", "error.correo", "El formato del correo no es válido");
             }
         }
+
 
         for (int i = 0; i < estudiante.getTelefonos().size(); i++) {
             String numero = estudiante.getTelefonos().get(i).getNumero();
@@ -72,6 +77,24 @@ public class EstudianteController {
             return "AltaEstudiante";
         }
 
+        if (file != null && file.isEmpty()); {
+
+            Path rutaRelativa = Paths.get("src/main/resources/static/images"");
+            String rutaAbsoluta = rutaRelativa.toFile().getAbsolutePath();
+            Path rutaCompleta = Path.of(RutaAbsoluta + "/" + file.getOriginalFilename());
+
+            Try {
+                byte[] bytes = file.getBytes();
+                Files.write(rutaCompleta, bytes);
+                estudiante.setFoto(file.getOriginalFilename());
+            } catch (IOException e) {
+                logger.severe("Error al guardar la foto: " + e.getMessage());
+                result.rejectValue("foto", "error.foto", "Error al guardar la foto");
+                model.addAttribute("facultades", facultadService.getAllFacultades());
+                return "AltaEstudiante";
+            }
+        }
+
         if (estudiante.getFacultad() != null && estudiante.getFacultad().getId() != 0) {
             facultadService.getFacultadById(estudiante.getFacultad().getId())
                     .ifPresent(estudiante::setFacultad);
@@ -83,6 +106,9 @@ public class EstudianteController {
         estudiante.getEmails().forEach(c -> c.setEstudiante(estudiante));
 
         estudianteService.saveEstudiante(estudiante);
+
         return "redirect:/estudiantes/listar";
+
+
     }
 }
