@@ -1,34 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 2;
-            padding: 2;
-        }
-        body {
-            background-color: black !important;
-            font-family: system-ui, sans-serif;
-            color: white;
-        }
-        :root {
-            --bg: #000;
-            --text: #f5f5f5;
-            --accent: #4cafef;
-        }
-    </style>
+    <title>Listado de Estudiantes</title>
 </head>
 <body>
 
-<h1>Listado de estudiantes</h1>
+```
+<h1>Listado de Estudiantes</h1>
+
 <div>
-    <a th:href="@{/estudiantes/Alta}">Alta/Modificacion</a>
+    <a th:href="@{/estudiantes/alta}">Alta Estudiante</a>
 </div>
-
-
 
 <table>
     <thead>
@@ -37,32 +21,35 @@
         <th>Primer Apellido</th>
         <th>Segundo Apellido</th>
         <th>Género</th>
-        <th>Numero de Telefono</th>
-        <th>Correo Electronico</th>
+        <th>Fecha de Matrícula</th>
         <th>Facultad</th>
+        <th colspan="2">Acciones</th>
     </tr>
     </thead>
+
     <tbody>
     <tr th:each="estudiante : ${estudiantes}">
         <td th:text="${estudiante.nombre}"></td>
         <td th:text="${estudiante.primerApellido}"></td>
         <td th:text="${estudiante.segundoApellido}"></td>
         <td th:text="${estudiante.genero}"></td>
+        <td th:text="${estudiante.fechaMatricula}"></td>
+        <td th:text="${estudiante.facultad.nombre}"></td>
+
         <td>
-    <span th:each="tel, iter : ${estudiante.telefonos}">
-        <span th:text="${tel.numero}"></span><span th:if="${!iter.last}">, </span>
-    </span>
+            <a th:href="@{/estudiantes/details/}+${estudiante.id}">
+                Detalles
+            </a>
         </td>
+
         <td>
-    <span th:each="correo, iter : ${estudiante.emails}">
-        <span th:text="${correo.direccion}"></span><span th:if="${!iter.last}">, </span>
-    </span>
+            <a th:href="@{/estudiantes/update/}+${estudiante.id}">
+                Actualizar
+            </a>
         </td>
-        <td th:text="${estudiante.facultad?.nombre ?: 'Sin asignar'}"></td>
     </tr>
     </tbody>
 </table>
-
 
 </body>
 </html>
