@@ -272,4 +272,25 @@ public class EstudianteController {
 
         return "AltaEstudiante";
     }
+
+    @GetMapping("/delete/{idEstudiante}")
+    public String deleteEstudiante(@PathVariable int idEstudiante, Model model) {
+
+        Estudiante estudianteEliminar = estudianteService.getEstudianteById(idEstudiante);
+
+        if (estudianteEliminar.getFoto() != null) {
+
+            Path rutaRelativa = Paths.get("src/main/resources/static/images" + estudianteEliminar.getFoto());
+            try {
+                Files.deleteIfExists(rutaRelativa);
+            } catch (IOException e) {
+                logger.severe("Error al eliminar la foto: " + e.getMessage());
+
+            }
+        }
+
+        estudianteService.deleteEstudiante(estudianteEliminar);
+
+        return "redirect:/estudiantes/listar";
+    }
 }
