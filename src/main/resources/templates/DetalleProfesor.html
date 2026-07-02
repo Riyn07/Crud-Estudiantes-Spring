@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Profesor</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #111;
+            font-family: system-ui, sans-serif;
+            color: white;
+            padding: 2rem;
+        }
+
+        h1, h2 { margin-bottom: 1rem; }
+
+        a, button {
+            color: #4cafef;
+            display: inline-block;
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid #4cafef;
+            border-radius: 6px;
+            text-decoration: none;
+            background-color: transparent;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        a:hover, button:hover {
+            background-color: #4cafef;
+            color: #000;
+        }
+
+        .btn-delete {
+            border-color: #c0392b;
+            color: #c0392b;
+        }
+
+        .btn-delete:hover {
+            background-color: #c0392b;
+            color: white;
+        }
+
+        .info {
+            background-color: #222;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #4cafef;
+        }
+
+        .info p {
+            margin: 0.5rem 0;
+        }
+
+        .info strong {
+            color: #4cafef;
+        }
+
+        img {
+            max-width: 300px;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .actions {
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<h1 th:text="'Detalles del Profesor: '
+        + ${profesor.nombre} + ' '
+        + ${profesor.primerApellido} + ' '
+        + ${profesor.segundoApellido}">
+</h1>
+
+<div class="info">
+    <p><strong>Género:</strong> <span th:text="${profesor.genero}"></span></p>
+    <p><strong>Fecha de Alta:</strong> <span th:text="${profesor.fechaAlta}"></span></p>
+    <p><strong>Salario:</strong> €<span th:text="${#numbers.formatDecimal(profesor.salario, 1, 2)}"></span></p>
+    <p><strong>Facultad:</strong> <span th:text="${profesor.facultad != null ? profesor.facultad.nombre : 'Sin facultad'}"></span></p>
+</div>
+
+<div th:if="${profesor.foto != null}">
+    <h2>Foto:</h2>
+    <img th:src="@{'/images/' + ${profesor.foto}}" alt="Foto del Profesor">
+</div>
+
+<div class="actions">
+    <a th:href="@{/profesores/listar}">Volver</a>
+    <a th:href="@{/profesores/update/}+${profesor.id}">Editar</a>
+    <a th:href="@{/profesores/delete/}+${profesor.id}" 
+       class="btn-delete"
+       onclick="return confirm('¿Está seguro de que desea eliminar este profesor?')">
+        Borrar
+    </a>
+</div>
+
+</body>
+</html>

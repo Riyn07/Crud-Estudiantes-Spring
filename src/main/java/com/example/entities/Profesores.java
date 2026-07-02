@@ -2,26 +2,25 @@ package com.example.entities;
 
 import com.example.model.Genero;
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Builder
 @Entity
-@Table(name = "estudiantes")
-@ToString(exclude = {"emails", "facultad", "telefonos"})
+@Table(name = "profesores")
+@ToString(exclude = {"facultad"})
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Estudiante implements Serializable {
+public class Profesores implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -49,31 +48,18 @@ public class Estudiante implements Serializable {
     @Enumerated(EnumType.STRING)
     private Genero genero;
 
-    @NotNull(message = "La fecha de matrícula es obligatoria")
-    @PastOrPresent(message = "La fecha de matrícula no puede ser futura")
+    @NotNull(message = "La fecha de alta es obligatoria")
+    @PastOrPresent(message = "La fecha de alta no puede ser futura")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate fechaMatricula;
+    private LocalDate fechaAlta;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Facultad facultad;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "estudiante")
-    @Builder.Default
-    private List<Telefono> telefonos = new ArrayList<>();
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "estudiante")
-    @Builder.Default
-    private List<Correo> emails = new ArrayList<>();
+    @NotNull(message = "El salario es obligatorio")
+    @DecimalMin(value = "0.01", message = "El salario debe ser un valor positivo")
+    private BigDecimal salario;
 
     private String foto;
 
-    public void addTelefono(Telefono telefono) {
-        telefonos.add(telefono);
-        telefono.setEstudiante(this);
-    }
-
-    public void addCorreo(Correo correo) {
-        emails.add(correo);
-        correo.setEstudiante(this);
-    }
 }
