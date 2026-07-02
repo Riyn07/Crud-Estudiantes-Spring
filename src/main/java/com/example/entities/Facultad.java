@@ -28,7 +28,7 @@ public class Facultad implements Serializable {
     private Integer id;
     private String nombre;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "facultad")
-    private List<Estudiante> estudiantes;
+    @OneToMany(mappedBy = "facultad", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Profesores> profesores;
 
 }

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Profesores</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #111;
+            font-family: system-ui, sans-serif;
+            color: white;
+            padding: 2rem;
+        }
+
+        h1 {
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-container {
+            margin-bottom: 2rem;
+        }
+
+        a {
+            color: #4cafef;
+            text-decoration: none;
+            padding: 0.6rem 1.2rem;
+            border: 1px solid #4cafef;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        a:hover {
+            background-color: #4cafef;
+            color: #000;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #222;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        thead {
+            background-color: #333;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #444;
+            color: #4cafef;
+            font-weight: bold;
+        }
+
+        td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #444;
+        }
+
+        tr:hover {
+            background-color: #2a2a2a;
+        }
+
+        .action-links {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-links a {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .btn-delete {
+            border-color: #c0392b;
+            color: #c0392b;
+        }
+
+        .btn-delete:hover {
+            background-color: #c0392b;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Listado de Profesores</h1>
+
+<div class="btn-container">
+    <a th:href="@{/profesores/alta}">+ Nuevo Profesor</a>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Primer Apellido</th>
+        <th>Segundo Apellido</th>
+        <th>Género</th>
+        <th>Fecha de Alta</th>
+        <th>Salario</th>
+        <th>Facultad</th>
+        <th colspan="3">Acciones</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="profesor : ${profesores}">
+        <td th:text="${profesor.nombre}"></td>
+        <td th:text="${profesor.primerApellido}"></td>
+        <td th:text="${profesor.segundoApellido}"></td>
+        <td th:text="${profesor.genero}"></td>
+        <td th:text="${profesor.fechaAlta}"></td>
+        <td th:text="'€' + ${#numbers.formatDecimal(profesor.salario, 1, 2)}"></td>
+        <td th:text="${profesor.facultad != null ? profesor.facultad.nombre : 'Sin facultad'}"></td>
+
+        <td class="action-links">
+            <a th:href="@{/profesores/details/}+${profesor.id}">
+                Detalles
+            </a>
+
+            <a th:href="@{/profesores/update/}+${profesor.id}">
+                Editar
+            </a>
+
+            <a th:href="@{/profesores/delete/}+${profesor.id}"
+               class="btn-delete"
+               th:data-nombre="${profesor.nombre}"
+               th:data-apellido="${profesor.primerApellido}"
+               onclick="if(confirm('¿Está seguro de que desea eliminar a ' + this.getAttribute('data-nombre') + ' ' + this.getAttribute('data-apellido') + '?')) { window.location = this.href; } return false;">
+                Eliminar
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

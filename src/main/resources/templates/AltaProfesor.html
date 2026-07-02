@@ -2,7 +2,7 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Formulario/Modificación Estudiante</title>
+    <title>Formulario/Modificación Profesores</title>
 
     <style>
         * {
@@ -93,18 +93,17 @@
 
 <body>
 
-<h1>Formulario de Estudiante</h1>
+<h1>Formulario de Profesor</h1>
 
-<a th:href="@{/estudiantes/listar}">Listado</a>
+<a th:href="@{/profesores/listar}">Listado</a>
 
-<form th:action="@{/estudiantes/save}"
-      th:object="${estudiante}"
+<form th:action="@{/profesores/save}"
+      th:object="${profesor}"
       method="post"
       enctype="multipart/form-data">
 
     <input type="hidden" th:field="*{id}">
 
-    <!-- ================= DATOS PERSONALES ================= -->
     <fieldset>
         <legend>Datos Personales</legend>
 
@@ -138,31 +137,18 @@
         </div>
     </fieldset>
 
-    <!-- ================= TELÉFONOS ================= -->
-    <fieldset>
-        <legend>Teléfonos</legend>
 
-        <div th:each="tel, i : *{telefonos}">
-            <input type="hidden" name="numerosTelefono" value="">
-        </div>
-    </fieldset>
-
-    <!-- ================= CORREOS ================= -->
-    <fieldset>
-        <legend>Correos</legend>
-
-        <div th:each="correo, i : *{emails}">
-            <input type="hidden" name="direccionesCorreo" value="">
-        </div>
-    </fieldset>
-
-    <!-- ================= ACADÉMICO ================= -->
     <fieldset>
         <legend>Datos Académicos</legend>
 
         <div>
-            <label>Fecha Matriculación</label>
-            <input type="date" th:field="*{fechaMatricula}" required>
+            <label>Fecha De Alta</label>
+            <input type="date" th:field="*{fechaAlta}" required>
+        </div>
+
+        <div>
+            <label>Salario</label>
+            <input type="number" th:field="*{salario}" step="0.01" min="0.01" placeholder="0.00" required>
         </div>
 
         <div>
